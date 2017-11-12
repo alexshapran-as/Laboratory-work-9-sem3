@@ -1,0 +1,8 @@
+﻿  stdafx.cpp
+  lab9server.cpp
+lab9server.cpp(120): warning C4244: аргумент: преобразование "std::streamsize" в "::size_t", возможна потеря данных
+  Создание кода
+  All 1641 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  lab9_server.vcxproj -> C:\Users\й\Desktop\Образование)\МГТУ Баумана обучение\Алгоритмические языки\3 Семестр\Лабы\lab9\lab9_server\Release\lab9_server.exe
+  lab9_server.vcxproj -> C:\Users\й\Desktop\Образование)\МГТУ Баумана обучение\Алгоритмические языки\3 Семестр\Лабы\lab9\lab9_server\Release\lab9_server.pdb (Full PDB)
