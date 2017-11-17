@@ -67,7 +67,8 @@ private:
 	{
 		try
 		{	
-			async_read_until(sock_, streambuf_, "\r\n\r\n", MEM_FN2(handlereaduntil, _1, _2)); // Функция асинхронного чтения из потока до \r\n\r\n
+			//streambuf_.prepare( filesize_/*1024 * 1024 * 1024*/);
+				async_read_until(sock_, streambuf_, "\r\n\r\n", MEM_FN2(handlereaduntil, _1, _2)); // Функция асинхронного чтения из потока до \r\n\r\n
 		}
 		catch (std::exception const& e)
 		{
@@ -148,17 +149,20 @@ private:
 			if (!ofs.is_open())
 				throw std::runtime_error((bfmt("[-] Ошибка открытия файла %1%") % message_).str());
 			dumped = 0;
-			cout << endl << "streambuf.size() = " << streambuf_.size() << endl;
 			if (streambuf_.size())
 			{
 				dumped += streambuf_.size();
 				ofs << &streambuf_; // Запись данных в файл
 			}
-			sock_.async_read_some(boost::asio::buffer(read_buffer_, max_msg), MEM_FN2(handlereadend, _1, _2)); // эта функция запускает асинхронную
-																												// операцию получения данных от сокета
+			while (dumped != filesize_)
+			{
+				dumped += boost::asio::read(sock_, streambuf_, boost::asio::transfer_at_least(1));
+				ofs << &streambuf_;
+			}
+			cout << endl << "Полученный размер файла: " << dumped << endl;
 		}
 		catch (std::exception const& e)
-		{
+		{ 
 			cout << endl << bfmt(e.what()) << endl;
 			stop();
 			delete this;
@@ -175,7 +179,7 @@ int main()
 	system("chcp 65001");
 	std::cout << std::endl << "*** Лабораторная работа №9: Реализация клиента, использующего утилиту rcp ***" << std::endl;
 	std::string filepath;
-	ip::tcp::endpoint ep(ip::address::from_string("127.0.0.1"), 8001); // конечная точка, аргументы - адрес и порт (лок.пк "127.0.0.1") (192.168.1.235) (Саня 10.50.1.189)
+	ip::tcp::endpoint ep(ip::address::from_string("10.50.1.115"), 8001); // конечная точка, аргументы - адрес и порт (лок.пк "127.0.0.1") (192.168.1.235) (Саня 10.50.1.189)
 	std::cout << std::endl << "Введите путь к файлу для копирования: ";
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
